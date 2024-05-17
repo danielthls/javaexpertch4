@@ -18,6 +18,14 @@ public class MovieCardDTO {
     	year = movie.getYear();
     	imgUrl = movie.getImgUrl();
     }
+    
+    public MovieCardDTO(MovieProjection movie) {
+    	id = movie.getId();
+    	title = movie.getTitle();
+    	subTitle = movie.getSubTitle();
+    	year = movie.getYear();
+    	imgUrl = movie.getImgUrl();
+    }
 
     public Long getId() {
         return id;

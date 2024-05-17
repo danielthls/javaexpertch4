@@ -19,40 +19,25 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.devsuperior.movieflix.dto.MovieCardDTO;
 import com.devsuperior.movieflix.dto.MovieDetailsDTO;
 import com.devsuperior.movieflix.dto.ReviewDTO;
-import com.devsuperior.movieflix.services.MovieService;
+import com.devsuperior.movieflix.services.ReviewService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/movies")
-public class MovieController {
+@RequestMapping(value = "/reviews")
+public class ReviewController {
 
 	@Autowired
-	private MovieService service;
+	private ReviewService service;
 	
-    @PreAuthorize("hasAnyRole('VISITOR', 'MEMBER')")
-	@GetMapping
-	public ResponseEntity<Page<MovieCardDTO>> findAll(
-			@RequestParam(value = "genreId", defaultValue  = "0")String genreId,
-			Pageable pageable
-			) {
-		Page<MovieCardDTO> list = service.findAllPaged(genreId, pageable);
-		return ResponseEntity.ok(list);
-	}
-    
-    @PreAuthorize("hasAnyRole('VISITOR', 'MEMBER')")
-	@GetMapping(value = "/{id}")
-    public ResponseEntity<MovieDetailsDTO> findById(@PathVariable Long id) {
-    	return ResponseEntity.ok().body(service.findById(id));
-    }
     
     @PreAuthorize("hasAnyRole('MEMBER')")
-	@PostMapping("/review") 
-	public ResponseEntity<MovieDetailsDTO> insert(@RequestBody @Valid ReviewDTO dto) {
-		MovieDetailsDTO movieDto = service.insertReview(dto);
+	@PostMapping 
+	public ResponseEntity<ReviewDTO> insert(@RequestBody @Valid ReviewDTO dto) {
+		dto = service.insertReview(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(dto.getId()).toUri();
-		return ResponseEntity.created(uri).body(movieDto);
+		return ResponseEntity.created(uri).body(dto);
 	}
     
 }
